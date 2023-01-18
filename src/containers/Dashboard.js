@@ -145,7 +145,9 @@ export default class {
       this.counter ++
     }
 
-    bills.forEach(bill => {
+    // Each click on arrow update bills displayed so they can be clickable in every situation
+    let clickableBills = filteredBills(bills, getStatus(this.index))
+    clickableBills.forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
