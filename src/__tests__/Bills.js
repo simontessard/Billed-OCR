@@ -29,7 +29,24 @@ describe("Given I am connected as an employee", () => {
     })
     describe('When I click on the new bill button', () => {
       test('I must be redirected to New Bill Page', () => {
+        document.body.innerHTML = BillsUI({ data: bills })
 
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname })
+        }
+        const store = null
+        const bill = new Bills({ document, onNavigate, store, localStorage: window.localStorage })
+
+        const handleClickButton = jest.fn(bill.handleClickNewBill)
+        const newBillButton = screen.getByTestId('btn-new-bill')
+        newBillButton.addEventListener('click', handleClickButton)
+        userEvent.click(newBillButton)
+        expect(handleClickButton).toHaveBeenCalled()
+        expect(screen.getAllByText('Envoyer une note de frais')).toBeTruthy()
+      })
+    })
+    describe('When I click on the icon eye', () => {
+      test('A modal should open', () => {
         document.body.innerHTML = BillsUI({ data: bills })
 
         const onNavigate = (pathname) => {
@@ -40,15 +57,13 @@ describe("Given I am connected as an employee", () => {
           document, onNavigate, store, localStorage: window.localStorage
         })
 
-        const handleClickButton = jest.fn(bill.handleClickNewBill)
-        const newBillButton = screen.getByTestId('btn-new-bill')
-        newBillButton.addEventListener('click', handleClickButton)
-        userEvent.click(newBillButton)
-        expect(handleClickButton).toHaveBeenCalled()
-        expect(screen.getAllByText('Envoyer une note de frais')).toBeTruthy()
+        const handleClickIconEye = jest.fn(bill.handleClickIconEye)
+        const iconEye = screen.getAllByTestId('icon-eye')[0]
+        iconEye.addEventListener('click', handleClickIconEye(iconEye))
+        userEvent.click(iconEye)
+        expect(handleClickIconEye).toHaveBeenCalled()
       })
     })
-
     test("Then bill icon in vertical layout should be highlighted", async () => {
 
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
