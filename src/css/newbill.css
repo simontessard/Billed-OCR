@@ -15,6 +15,10 @@
   margin-top: 16px;
 }
 
+.col-half input {
+  margin-bottom: 10px;
+}
+
 .blue-border {
   opacity: 0.5;
   border: 2px solid #0D5AE5 !important;
@@ -60,4 +64,9 @@ textarea:focus, input:focus, select:focus {
 
 *[placeholder] {
   color: #0E5AE5 !important;
+}
+
+span {
+  color: red;
+  display: none;
 }

@@ -27,7 +27,10 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
 
+    const fileErrorMsg = document.querySelector(`span[data-testid="fileErrorMsg"]`)
+
     if (allowedExtensions.includes(fileExtension)) {
+      fileErrorMsg.style.display = "none"
       this.store
       .bills()
       .create({
@@ -42,6 +45,11 @@ export default class NewBill {
         this.fileUrl = fileUrl
         this.fileName = fileName
       }).catch(error => console.error(error))
+    }
+    else {
+      e.target.value = ''
+      fileErrorMsg.innerHTML = fileExtension.toUpperCase() + " n'est pas un format autorisé, les formats autorisés sont : PNG, JPEG, JPG"
+      fileErrorMsg.style.display = "block"
     }
   }
   handleSubmit = e => {
