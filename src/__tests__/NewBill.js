@@ -28,6 +28,36 @@ describe("Given I am connected as an employee", () => {
       expect(screen.getByTestId('file')).toBeTruthy()
     })
 
+    test("Then I select wrong image file format", async () => {
+      document.body.innerHTML = NewBillUI()
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee', email: 'employee@test.tld',
+      }))
+
+      jest.spyOn(mockedBills, "bills")
+      const store = mockedBills
+      const newBill = new NewBill({ document, onNavigate, store, localStorage: window.localStorage })
+      const testImageFile = new File(["test"], "test.gif", { type: "gif" });
+      const fileInput = screen.getByTestId('file')
+      const handleChangeFile = jest.fn(newBill.handleChangeFile)
+      fireEvent.change(fileInput, { target: { files: [testImageFile] } })
+      handleChangeFile({
+        target: {
+          files: [testImageFile],
+          value: 'C:\path\test.gif',
+        },
+        preventDefault: function () { }
+      })
+
+      await expect(handleChangeFile).toHaveBeenCalled()
+      expect(screen.getByTestId("fileErrorMsg")).toBeTruthy()
+      expect(screen.getByTestId("fileErrorMsg")).not.toBe('')
+    })
+
     describe("When I click on Submit button", () => {
       describe("If inputs are empty", () => {
 
@@ -53,7 +83,7 @@ describe("Given I am connected as an employee", () => {
         })
       })
 
-      describe("If fields are filled and correct", () => { 
+      describe("If fields are filled and correct", () => {
 
         test("It should redirect to Bills page", async () => {
           document.body.innerHTML = NewBillUI()
@@ -80,13 +110,13 @@ describe("Given I am connected as an employee", () => {
           screen.getByTestId('commentary').value = "Commentaire de test"
 
           const handleChangeFile = jest.fn(newBill.handleChangeFile)
-          fireEvent.change(fileInput, {  target: {files: [testImageFile]}  })
+          fireEvent.change(fileInput, { target: { files: [testImageFile] } })
           handleChangeFile({
             target: {
-              files: [ testImageFile ],
+              files: [testImageFile],
               value: 'C:\path\test.png',
             },
-            preventDefault: function(){}
+            preventDefault: function () { }
           })
 
           const formNewBill = screen.getByTestId("form-new-bill");
