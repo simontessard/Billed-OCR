@@ -32,23 +32,25 @@ export default class NewBill {
     if (allowedExtensions.includes(fileExtension)) {
       fileErrorMsg.style.display = "none"
       this.store
-      .bills()
-      .create({
-        data: formData,
-        headers: {
-          noContentType: true
-        }
-      })
-      .then(({ fileUrl, key }) => {
-        console.log(fileUrl)
-        this.billId = key
-        this.fileUrl = fileUrl
-        this.fileName = fileName
-      }).catch(error => console.error(error))
+        .bills()
+        .create({
+          data: formData,
+          headers: {
+            noContentType: true
+          }
+        })
+        .then(({ fileUrl, key }) => {
+          console.log(fileUrl)
+          this.billId = key
+          this.fileUrl = fileUrl
+          this.fileName = fileName
+        }).catch(error => console.error(error))
     }
     else {
       e.target.value = ''
-      fileErrorMsg.innerHTML = fileExtension.toUpperCase() + " n'est pas un format autorisé, les formats autorisés sont : PNG, JPEG, JPG"
+      if (typeof variable !== 'undefined') {
+        fileErrorMsg.innerHTML = fileExtension.toUpperCase() + " n'est pas un format autorisé, les formats autorisés sont : PNG, JPEG, JPG"
+      }
       fileErrorMsg.style.display = "block"
     }
   }
