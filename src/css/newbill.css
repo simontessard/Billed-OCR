@@ -66,7 +66,7 @@ textarea:focus, input:focus, select:focus {
   color: #0E5AE5 !important;
 }
 
-span {
+#fileErrorMsg {
   color: red;
   display: none;
 }
