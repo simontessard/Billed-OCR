@@ -48,7 +48,7 @@ export default class NewBill {
     }
     else {
       e.target.value = ''
-      if (typeof variable !== 'undefined') {
+      if (typeof fileExtension !== 'undefined') {
         fileErrorMsg.innerHTML = fileExtension.toUpperCase() + " n'est pas un format autorisé, les formats autorisés sont : PNG, JPEG, JPG"
       }
       fileErrorMsg.style.display = "block"
