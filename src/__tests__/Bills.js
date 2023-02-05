@@ -9,8 +9,10 @@ import { bills } from "../fixtures/bills.js"
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js"
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import Bills from "../containers/Bills.js"
+import mockStore from "../__mocks__/store"
 
 import router from "../app/Router.js";
+jest.mock("../app/store", () => mockStore)
 
 describe("Given I am connected as an employee", () => {
   describe('When I am on Bills page but it is loading', () => {
@@ -86,6 +88,21 @@ describe("Given I am connected as an employee", () => {
       const antiChrono = (a, b) => ((a < b) ? 1 : -1)
       const datesSorted = [...dates].sort(antiChrono)
       expect(dates).toEqual(datesSorted)
+    })
+    test("fetches bills from mock API GET", async () => {
+      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
+      document.body.innerHTML = ''
+      const root = document.createElement("div")
+      root.setAttribute("id", "root")
+      document.body.append(root)
+      router()
+      window.onNavigate(ROUTES_PATH.Bills)
+      await waitFor(() => screen.getByText("Accepté"))
+      const contentPending  = await screen.getByText("En attente")
+      expect(contentPending).toBeTruthy()
+      const contentRefused  = await screen.getAllByText("Refused")
+      expect(contentRefused).toBeTruthy()
+      expect(screen.getByText("Mes notes de frais")).toBeTruthy()
     })
   })
 })
